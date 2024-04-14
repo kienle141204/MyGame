@@ -1,14 +1,52 @@
+.button {
+    -fx-background-size: 32px 32px; /* Kích thước của biểu tượng */
+    -fx-background-position: center; /* Căn giữa biểu tượng */
+    -fx-font-family: "Bell MT";
+
+
+
+    -fx-background-color: transparent; /* Xóa nền của button */
+    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-padding: 0;
+}
 .play-button {
     -fx-background-size: 32px 32px; /* Kích thước của biểu tượng */
     -fx-background-position: center; /* Căn giữa biểu tượng */
-    -fx-background-color: #1111;
+    -fx-font-family: "Bell MT";
+
+
+
+    -fx-background-color: transparent; /* Xóa nền của button */
+    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-padding: 0;
+}
+.exit-button {
+    -fx-background-size: 32px 32px; /* Kích thước của biểu tượng */
+    -fx-background-position: center; /* Căn giữa biểu tượng */
     -fx-font-family: "Bell MT";
 
     /* Giới hạn kích thước của nút */
-    -fx-max-width: 60px; /* Đặt giá trị tối đa cho chiều rộng */
-    -fx-max-height: 60px; /* Đặt giá trị tối đa cho chiều cao */
 
-    /* Điều chỉnh khoảng cách giữa biểu tượng và viền của nút */
-    -fx-padding: 5px; /* Đặt giá trị cho padding */
+
+    -fx-background-color: transparent; /* Xóa nền của button */
+    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-padding: 0;
 }
+.help-button {
+    -fx-background-size: 32px 32px; /* Kích thước của biểu tượng */
+    -fx-background-position: center; /* Căn giữa biểu tượng */
+    -fx-font-family: "Bell MT";
 
+    -fx-background-color: transparent; /* Xóa nền của button */
+    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-padding: 0;
+}
+.back-button{
+    -fx-background-size: 32px 32px; /* Kích thước của biểu tượng */
+    -fx-background-position: center; /* Căn giữa biểu tượng */
+    -fx-font-family: "Bell MT";
+
+    -fx-background-color: transparent; /* Xóa nền của button */
+    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-padding: 0;
+}
