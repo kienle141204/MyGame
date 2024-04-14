@@ -1,19 +1,19 @@
 package com.example.mygame;
 
-import javafx.application.Application;
+import javafx.application.Application; // thư viện bắt buộc phải có
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos; // để điều chỉnh các box theo tọa độ
+import javafx.scene.layout.StackPane; //tạo stackpane , giúp căn chỉnh nút (một phần nhỏ)
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.animation.ScaleTransition;
-import javafx.util.Duration;
-import javafx.geometry.Insets;
+import javafx.scene.control.Button; // tạo nút và điều khiển nút
+import javafx.scene.layout.HBox; // box ngang
+import javafx.scene.layout.VBox;//box dọc
+import javafx.scene.image.Image;// quản lý ảnh , nhưng không hiển thị ra giao diện người dùng
+import javafx.scene.image.ImageView; // đưa ảnh ra giao diện người dùng
+import javafx.animation.ScaleTransition; // hiệu ứng khi trỏ vào nút
+import javafx.util.Duration; // điều khiển các hoạt động liên quan đến thời gian
+import javafx.geometry.Insets; // chỉnh css ,lề , linh tinh
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,14 +30,14 @@ public class MenuGame extends Application {
     public void start(Stage primaryStage) throws FileNotFoundException {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Menu Game");
-
+        // button chứa tên game , ấn vào hiện ra thông tin về nhóm
         Button button = new Button();
-        button.getStyleClass().add("button");
+        button.getStyleClass().add("button");//add class css cho button
         Image name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/name2.png"));
         ImageView nameView = new ImageView(name);
         button.setGraphic(nameView);
-        nameView.setFitWidth(500); // Đặt chiều rộng tối đa
-        nameView.setFitHeight(250); // Đặt chiều cao tối đa
+        nameView.setFitWidth(500);
+        nameView.setFitHeight(250);
 
 
         Button button1 = new Button();
@@ -80,12 +80,12 @@ public class MenuGame extends Application {
         Image image1 = new Image("file:E:/code/MyGame/src/main/java/image/mazeimage.png");
         ImageView backgroundImage = new ImageView(image1);
         layout1.getChildren().add(backgroundImage);
-        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());// làm như này thì nền mới full cửa sổ được
         backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
-        layout1.getChildren().add(vbox);
-        //layout1.getChildren().addAll(backgroundImage, vbox);
+        layout1.getChildren().add(vbox);// 3 nút được hiển thị theo chiều dọc
 
-        // Hiệu ứng ấn nút
+
+        // Hiệu ứng ấn nút , to lên khi trỏ vào , nhỏ lại khi ra xa
         ScaleTransition scaleInButton1 = new ScaleTransition(Duration.millis(100), button1);
         scaleInButton1.setFromX(1);
         scaleInButton1.setFromY(1);
@@ -143,8 +143,16 @@ public class MenuGame extends Application {
             scaleOutButton3.play();
         });
 
+        // Hiệu ứng khi ấn nút help==button2 và exit==button3
+        button2.setOnAction(event ->{
+            primaryStage.setScene(scene2);
+        });
+        button3.setOnAction(event -> {
+            Platform.exit(); // kết thúc chương trình
+        });
 
-        //Khởi tạo scene2
+        //Khởi tạo scene2 , đây là cửa sổ mở ra khi ấn help
+        // cài đặt một vào thứ cho scene2
         StackPane layout2 = new StackPane();
         Image backgroundScene2 = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/scene2.png"));
         ImageView backgroundView2 = new ImageView(backgroundScene2);
@@ -188,19 +196,7 @@ public class MenuGame extends Application {
             primaryStage.setScene(scene1);
         });
 
-
-
-
-        // Hiệu ứng khi ấn nút
-        button2.setOnAction(event ->{
-            primaryStage.setScene(scene2);
-        });
-        button3.setOnAction(event -> {
-            Platform.exit();
-        });
-
-
-
+        // Mặc định khi mở chương trình là chạy scene1
         primaryStage.setScene(scene1);
         primaryStage.show();
     }
