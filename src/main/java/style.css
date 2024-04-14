@@ -1,0 +1,14 @@
+.play-button {
+    -fx-background-size: 32px 32px; /* Kích thước của biểu tượng */
+    -fx-background-position: center; /* Căn giữa biểu tượng */
+    -fx-background-color: #1111;
+    -fx-font-family: "Bell MT";
+
+    /* Giới hạn kích thước của nút */
+    -fx-max-width: 60px; /* Đặt giá trị tối đa cho chiều rộng */
+    -fx-max-height: 60px; /* Đặt giá trị tối đa cho chiều cao */
+
+    /* Điều chỉnh khoảng cách giữa biểu tượng và viền của nút */
+    -fx-padding: 5px; /* Đặt giá trị cho padding */
+}
+
