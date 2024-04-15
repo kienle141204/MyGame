@@ -23,7 +23,7 @@ import java.io.FileNotFoundException;
 
 public class MenuGame extends Application {
     private Stage primaryStage;
-    protected Scene scene1,scene2;
+    private Scene scene1;
 
 
 
@@ -71,7 +71,7 @@ public class MenuGame extends Application {
 
         VBox vbox = new VBox(button,button1, button2, button3);
         vbox.setAlignment(javafx.geometry.Pos.CENTER);
-        StackPane.setMargin(vbox, new Insets(200, 0, 0, 0));
+        StackPane.setMargin(vbox, new Insets(100, 0, 0, 0));
 
         StackPane layout1 = new StackPane();
 
@@ -87,62 +87,10 @@ public class MenuGame extends Application {
 
 
         // Hiệu ứng ấn nút , to lên khi trỏ vào , nhỏ lại khi ra xa
-        ScaleTransition scaleInButton1 = new ScaleTransition(Duration.millis(100), button1);
-        scaleInButton1.setFromX(1);
-        scaleInButton1.setFromY(1);
-        scaleInButton1.setToX(1.2);
-        scaleInButton1.setToY(1.2);
-
-        ScaleTransition scaleOutButton1 = new ScaleTransition(Duration.millis(100), button1);
-        scaleOutButton1.setFromX(1.2);
-        scaleOutButton1.setFromY(1.2);
-        scaleOutButton1.setToX(1);
-        scaleOutButton1.setToY(1);
-
-        ScaleTransition scaleInButton2 = new ScaleTransition(Duration.millis(100), button2);
-        scaleInButton2.setFromX(1);
-        scaleInButton2.setFromY(1);
-        scaleInButton2.setToX(1.2);
-        scaleInButton2.setToY(1.2);
-
-        ScaleTransition scaleOutButton2 = new ScaleTransition(Duration.millis(100), button2);
-        scaleOutButton2.setFromX(1.2);
-        scaleOutButton2.setFromY(1.2);
-        scaleOutButton2.setToX(1);
-        scaleOutButton2.setToY(1);
-
-        ScaleTransition scaleInButton3 = new ScaleTransition(Duration.millis(100), button3);
-        scaleInButton3.setFromX(1);
-        scaleInButton3.setFromY(1);
-        scaleInButton3.setToX(1.2);
-        scaleInButton3.setToY(1.2);
-
-        ScaleTransition scaleOutButton3 = new ScaleTransition(Duration.millis(100), button3);
-        scaleOutButton3.setFromX(1.2);
-        scaleOutButton3.setFromY(1.2);
-        scaleOutButton3.setToX(1);
-        scaleOutButton3.setToY(1);
-
-
-
-        button1.setOnMouseEntered(mouseEvent -> {
-            scaleInButton1.play();
-        });
-        button1.setOnMouseExited(mouseEvent -> {
-            scaleOutButton1.play();
-        });
-        button2.setOnMouseEntered(mouseEvent -> {
-            scaleInButton2.play();
-        });
-        button2.setOnMouseExited(mouseEvent -> {
-            scaleOutButton2.play();
-        });
-        button3.setOnMouseEntered(mouseEvent -> {
-            scaleInButton3.play();
-        });
-        button3.setOnMouseExited(mouseEvent -> {
-            scaleOutButton3.play();
-        });
+        ButtonScaleEffect.addScaleEffect(button);
+        ButtonScaleEffect.addScaleEffect(button1);
+        ButtonScaleEffect.addScaleEffect(button2);
+        ButtonScaleEffect.addScaleEffect(button3);
 
 
         button3.setOnAction(event -> {
@@ -151,13 +99,18 @@ public class MenuGame extends Application {
 
         //Khởi tạo scene2 , đây là cửa sổ mở ra khi ấn help
         // cài đặt một vào thứ cho scene2
-        HelpScene helpScene = new HelpScene(primaryStage, scene1, scene2);
-        Scene scene2 = helpScene.getScene();
+        HelpScene helpScene = new HelpScene(primaryStage, scene1);
+        //Scene scene2 = helpScene.getScene();
         // Hiệu ứng khi ấn nút help==button2 và exit==button3
         button2.setOnAction(event ->{
             primaryStage.setScene(helpScene.getScene());
         });
+        //ấn và tên game hiện ra tên thành viên
+        Member member = new Member(primaryStage, scene1);
 
+        button.setOnAction(event->{
+            primaryStage.setScene(member.getScene());
+        });
         // Mặc định khi mở chương trình là chạy scene1
         primaryStage.setScene(scene1);
         primaryStage.show();

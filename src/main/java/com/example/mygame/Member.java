@@ -14,14 +14,14 @@ import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class HelpScene {
+public class Member {
     private Scene scene;
 
 
-    public HelpScene(Stage primaryStage,Scene scene1) throws FileNotFoundException {
+    public Member(Stage primaryStage, Scene scene1) throws FileNotFoundException {
 
         StackPane layout = new StackPane();
-        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/helpScene1.png"));
+        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/member.png"));
         ImageView backgroundView = new ImageView(background);
         layout.getChildren().add(backgroundView);
 
