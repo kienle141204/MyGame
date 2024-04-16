@@ -96,7 +96,6 @@ public class MenuGame extends Application {
         button3.setOnAction(event -> {
             Platform.exit(); // kết thúc chương trình
         });
-
         //Khởi tạo scene2 , đây là cửa sổ mở ra khi ấn help
         // cài đặt một vào thứ cho scene2
         HelpScene helpScene = new HelpScene(primaryStage, scene1);
@@ -111,6 +110,13 @@ public class MenuGame extends Application {
         button.setOnAction(event->{
             primaryStage.setScene(member.getScene());
         });
+        //
+        PlayLevel playLevel = new PlayLevel(primaryStage, scene1);
+
+        button1.setOnAction(event->{
+            primaryStage.setScene(playLevel.getScene());
+        });
+
         // Mặc định khi mở chương trình là chạy scene1
         primaryStage.setScene(scene1);
         primaryStage.show();

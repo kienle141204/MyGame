@@ -1,6 +1,9 @@
 package com.example.mygame;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,31 +19,57 @@ import java.io.FileNotFoundException;
 
 public class HelpScene {
     private Scene scene;
+    private static final String[] IMAGE_PATHS = {
+            "E:/code/MyGame/src/main/java/wi/10.png",
+            "E:/code/MyGame/src/main/java/wi/11.png",
+            "E:/code/MyGame/src/main/java/wi/12.png",
+            "E:/code/MyGame/src/main/java/wi/13.png",
+            "E:/code/MyGame/src/main/java/wi/14.png",
+            "E:/code/MyGame/src/main/java/wi/15.png",
+            "E:/code/MyGame/src/main/java/wi/16.png",
+            "E:/code/MyGame/src/main/java/wi/17.png"
+            // Thêm các đường dẫn hình ảnh khác vào đây
+    };
+    private int currentFrame = 0;
+
 
 
     public HelpScene(Stage primaryStage,Scene scene1) throws FileNotFoundException {
 
         StackPane layout = new StackPane();
-        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/helpScene1.png"));
+
+        // Load hình ảnh background và hiển thị nó trong ImageView
+        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/helpscene4.png"));
         ImageView backgroundView = new ImageView(background);
         layout.getChildren().add(backgroundView);
 
-        scene = new Scene(layout, 1000, 750);
+        // Tạo ImageView để hiển thị nhân vật và thêm vào layout
+        ImageView characterImageView = new ImageView();
+        layout.getChildren().add(characterImageView);
+        characterImageView.setStyle("-fx-background-color: #112222");
 
-        // Tạo nút Back
+        // Tạo nút Back và thêm vào layout
         Button backButton = new Button();
         backButton.getStyleClass().add("back-button");
-        Image image = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/back.png"));
-        ImageView imageView = new ImageView(image);
-        backButton.setGraphic(imageView);
-        layout.getChildren().add(imageView);
+        Image backImage = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/back.png"));
+        ImageView backImageView = new ImageView(backImage);
+        backButton.setGraphic(backImageView);
         layout.getChildren().add(backButton);
-        scene.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
-        imageView.setFitHeight(75);
-        imageView.setFitWidth(150);
 
         StackPane.setAlignment(backButton, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(backButton, new Insets(0, 32, 30, 0));
+
+
+
+        // Đặt vị trí ban đầu của nhân vật
+        characterImageView.setTranslateX(220); // Vị trí x
+        characterImageView.setTranslateY(-30); // Vị trí y
+
+        // Đặt kích thước cho nhân vật
+        double characterWidth = 750; // Chiều rộng mới
+        double characterHeight = 750; // Chiều cao mới
+        characterImageView.setFitWidth(characterWidth);
+        characterImageView.setFitHeight(characterHeight);
 
         // Hiệu ứng cho nút Back
         ButtonScaleEffect.addScaleEffect(backButton);
@@ -48,6 +77,34 @@ public class HelpScene {
         backButton.setOnAction(event -> {
             primaryStage.setScene(scene1);
         });
+
+        // Load hình ảnh nhân vật và thêm vào layout
+        Image[] characterImages = new Image[IMAGE_PATHS.length];
+        for (int i = 0; i < IMAGE_PATHS.length; i++) {
+            try {
+                Image fileInputStream = new Image(new FileInputStream(IMAGE_PATHS[i]));
+                characterImages[i] = fileInputStream;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Đặt hình ảnh ban đầu cho nhân vật
+        characterImageView.setImage(characterImages[currentFrame]);
+
+        // Tạo timeline để thay đổi hình ảnh của nhân vật
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), event -> {
+            currentFrame = (currentFrame + 1) % characterImages.length;
+            characterImageView.setImage(characterImages[currentFrame]);
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE); // Lặp lại vô hạn
+        timeline.play();
+
+        scene = new Scene(layout, 1000, 750);
+        scene.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
+
+
+
     }
 
     public Scene getScene() {

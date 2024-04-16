@@ -10,12 +10,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Member {
     private Scene scene;
+
 
 
     public Member(Stage primaryStage, Scene scene1) throws FileNotFoundException {
@@ -48,6 +52,8 @@ public class Member {
         backButton.setOnAction(event -> {
             primaryStage.setScene(scene1);
         });
+
+
     }
 
     public Scene getScene() {
