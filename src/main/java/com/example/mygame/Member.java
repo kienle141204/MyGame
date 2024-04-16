@@ -37,7 +37,6 @@ public class Member {
         Image image = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/back.png"));
         ImageView imageView = new ImageView(image);
         backButton.setGraphic(imageView);
-        layout.getChildren().add(imageView);
         layout.getChildren().add(backButton);
         scene.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
         imageView.setFitHeight(75);

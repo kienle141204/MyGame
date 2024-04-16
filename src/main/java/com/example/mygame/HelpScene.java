@@ -29,10 +29,9 @@ public class HelpScene {
             "E:/code/MyGame/src/main/java/wi/16.png",
             "E:/code/MyGame/src/main/java/wi/17.png"
             // Thêm các đường dẫn hình ảnh khác vào đây
+            // ảnh này  thêm ở package wi
     };
     private int currentFrame = 0;
-
-
 
     public HelpScene(Stage primaryStage,Scene scene1) throws FileNotFoundException {
 
@@ -46,7 +45,6 @@ public class HelpScene {
         // Tạo ImageView để hiển thị nhân vật và thêm vào layout
         ImageView characterImageView = new ImageView();
         layout.getChildren().add(characterImageView);
-        characterImageView.setStyle("-fx-background-color: #112222");
 
         // Tạo nút Back và thêm vào layout
         Button backButton = new Button();

@@ -1,25 +1,25 @@
-.button {
-    -fx-background-color: transparent; /* Xóa nền của button */
-    -fx-border-width: 0; /* Xóa viền của button */
+.button{
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 0;
 }
-.play-button {
-    -fx-background-color: transparent; /* Xóa nền của button */
-    -fx-border-width: 0; /* Xóa viền của button */
+/*.play-button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 0;
 }
 .exit-button {
-    -fx-background-color: transparent; /* Xóa nền của button */
-    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 0;
 }
 .help-button {
-    -fx-background-color: transparent; /* Xóa nền của button */
-    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 0;
 }
 .back-button{
-    -fx-background-color: transparent; /* Xóa nền của button */
-    -fx-border-width: 0; /* Xóa viền của button */
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 0;
 }

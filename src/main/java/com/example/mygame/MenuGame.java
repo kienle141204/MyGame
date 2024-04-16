@@ -34,7 +34,7 @@ public class MenuGame extends Application {
         primaryStage.setTitle("Menu Game");
         // button chứa tên game , ấn vào hiện ra thông tin về nhóm
         Button button = new Button();
-        button.getStyleClass().add("button");//add class css cho button
+        button.getStyleClass().add("button");//add class css cho button :) tôi nhận ra là tất cả nút khác kế thừa thuộc tính của button
         Image name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/name2.png"));
         ImageView nameView = new ImageView(name);
         button.setGraphic(nameView);
