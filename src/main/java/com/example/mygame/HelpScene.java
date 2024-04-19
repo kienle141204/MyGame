@@ -100,9 +100,6 @@ public class HelpScene {
 
         scene = new Scene(layout, 1000, 750);
         scene.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
-
-
-
     }
 
     public Scene getScene() {
