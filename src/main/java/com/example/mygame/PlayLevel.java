@@ -35,6 +35,7 @@ public class PlayLevel {
     };
 
 
+
     public PlayLevel(Stage primaryStage, Scene scene1) throws FileNotFoundException {
 
         StackPane layout = new StackPane();
@@ -124,7 +125,11 @@ public class PlayLevel {
         hbox.getStyleClass().add("hbox");
         hbox.setAlignment(Pos.CENTER);
         layout.getChildren().add(hbox);
-
+        // game1
+        Main m = new Main();
+        game1.setOnAction(event->{
+            m.start(primaryStage);
+        });
 
         layout.getChildren().add(backButton);
 
