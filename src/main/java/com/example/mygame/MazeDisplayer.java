@@ -1,4 +1,4 @@
-package application;
+package com.example.mygame;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -54,7 +54,7 @@ class MazeDisplayer
 		            {
 		            	Image name;
 						try {
-							name = new Image(new FileInputStream("C:\\Users\\MyPC\\OneDrive\\Documents/wall.png"));
+							name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/playlv1.png"));
 							ImageView wall = new ImageView(name) ;
 		                    wall.setFitWidth(20);
 		                    wall.setFitHeight(20);
@@ -65,7 +65,7 @@ class MazeDisplayer
 		            } else {
 		                Image name;
 						try {
-							name = new Image(new FileInputStream("C:\\Users\\MyPC\\OneDrive\\Documents/path.jpg"));
+							name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/help.png"));
 							ImageView path = new ImageView(name) ;
 		                    path.setFitWidth(20);
 		                    path.setFitHeight(20);
@@ -117,5 +117,4 @@ class MazeDisplayer
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
 		return scene ; 
 	}
-
 }
