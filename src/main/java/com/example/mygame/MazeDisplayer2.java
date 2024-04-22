@@ -1,4 +1,4 @@
-package application;
+package com.example.mygame;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -10,15 +10,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.awt.Button;
-import java.awt.Checkbox;
+import javafx.scene.control.Button;
+//import java.awt.Checkbox;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import javax.print.attribute.standard.PrinterIsAcceptingJobs;
+//import javax.print.attribute.standard.PrinterIsAcceptingJobs;
 
 
-class MazeDisplayer
+class MazeDisplayer2
 {
 	public static  int NUM_OF_FRAMES = 3;
 	private static final int WIDTH = 400;
@@ -45,14 +45,14 @@ class MazeDisplayer
 		this.mazeData = mazeData;
 	}
 	
-	public MazeDisplayer(GridPane root, int [][] mazeData) 
+	public MazeDisplayer2(GridPane root, int [][] mazeData)
 	{
 		setRoot(root) ;
 		setMazeData(mazeData );
 	}
 	private void drawCharacter() throws FileNotFoundException
 	{
-		character = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_right_1.png")));
+		character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_right_1.png")));
 		character.setFitWidth(RECT_SIZE);
 		character.setFitHeight(RECT_SIZE);
 		root.add(character, characterX, characterY);
@@ -66,7 +66,7 @@ class MazeDisplayer
 		            {
 		            	Image name;
 						try {
-							name = new Image(new FileInputStream("C:\\Users\\MyPC\\OneDrive\\Documents/wall.png"));
+							name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/wall.png"));
 							ImageView wall = new ImageView(name) ;
 		                    wall.setFitWidth(20);
 		                    wall.setFitHeight(20);
@@ -78,7 +78,7 @@ class MazeDisplayer
 		            {
 		                Image name;
 						try {
-							name = new Image(new FileInputStream("C:\\Users\\MyPC\\OneDrive\\Documents/path.jpg"));
+							name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/path.jpg"));
 							ImageView path = new ImageView(name) ;
 		                    path.setFitWidth(20);
 		                    path.setFitHeight(20);
@@ -91,7 +91,7 @@ class MazeDisplayer
 						{
 							Image name;
 							try {
-								name = new Image(new FileInputStream("C:\\Users\\MyPC\\OneDrive\\Documents/gate.png"));
+								name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/gate.png"));
 								ImageView gate = new ImageView(name) ;
 			                    gate.setFitWidth(20);
 			                    gate.setFitHeight(20);
@@ -148,44 +148,44 @@ class MazeDisplayer
 			{
 				if(fw == 0)
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_up_1.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_up_1.png")));
 				}
 				else 
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_up_2.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_up_2.png")));
 				}
 			}
 			else if(signal == "S")
 			{
 				if(fs == 0)
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_down_1.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_down_1.png")));
 				}
 				else 
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_down_2.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_down_2.png")));
 				}
 			}
 			else if(signal == "A")
 			{
 				if(fa == 0)
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_left_1.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_left_1.png")));
 				}
 				else 
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_left_2.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_left_2.png")));
 				}
 			}
 			else if(signal == "D")
 			{
 				if(fd == 0)
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_right_1.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_right_1.png")));
 				}
 				else 
 				{
-					character1 = new ImageView(new Image(new FileInputStream("C:\\Users\\MyPC\\Downloads\\BlueBoy\\BlueBoy/boy_right_2.png")));
+					character1 = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/boy_right_2.png")));
 				}
 			}
 	 		return character1 ; 

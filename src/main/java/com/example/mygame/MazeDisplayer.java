@@ -4,13 +4,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Pane;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 
 
 class MazeDisplayer
@@ -20,16 +21,16 @@ class MazeDisplayer
 	private static final int HEIGHT = 750;
 	private static final int RECT_SIZE = 32;
 	private ImageView character;
-	private int characterX = 1;
-	private int characterY = 1;
-	private GridPane root ;
+	private double characterX = 32;
+	private double characterY = 32;
+	private Pane root ;
 	private int [][] mazeData ;
-	private Image characterImage;
+	private int currentFrame = 0;
 
-	public GridPane getRoot() {
+	public Pane getRoot() {
 		return root;
 	}
-	public void setRoot(GridPane root) {
+	public void setRoot(Pane root) {
 		this.root = root;
 	}
 
@@ -40,21 +41,23 @@ class MazeDisplayer
 		this.mazeData = mazeData;
 	}
 
-	public MazeDisplayer(GridPane root, int [][] mazeData)
+	public MazeDisplayer(Pane root, int [][] mazeData)
 	{
 		setRoot(root) ;
 		setMazeData(mazeData );
 	}
 	private void drawCharacter() throws FileNotFoundException
 	{
-		character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/www.png")));
+		character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/hold.png")));
 		SpriteAnimation animation = new SpriteAnimation(character,
 		                Duration.millis(1000), 3, 32, 32);
 		animation.setCycleCount(javafx.animation.Animation.INDEFINITE);
 		animation.play();
 		character.setFitWidth(RECT_SIZE);
 		character.setFitHeight(RECT_SIZE);
-		root.add(character, characterX, characterY);
+		character.setX(characterX);
+		character.setY(characterY);
+		root.getChildren().add(character);
 		//
 	}
 	private void drawMaze()
@@ -69,22 +72,40 @@ class MazeDisplayer
 						ImageView wall = new ImageView(name) ;
 						wall.setFitWidth(32);
 						wall.setFitHeight(32);
-						root.add(wall, j, i);
+						wall.setX(j*32);
+						wall.setY(i*32);
+						root.getChildren().add(wall);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
-				} else {
+				} else if (mazeData[i][j] == 1) {
 					Image name;
 					try {
 						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/path.jpg"));
 						ImageView path = new ImageView(name) ;
 						path.setFitWidth(32);
 						path.setFitHeight(32);
-						root.add(path, j, i);
+						path.setX(j*32);
+						path.setY(i*32);
+						root.getChildren().add(path);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
 
+				} else if(mazeData[i][j] == 2)
+				{
+					Image name;
+					try {
+						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/gate.png"));
+						ImageView gate = new ImageView(name) ;
+						gate.setFitWidth(32);
+						gate.setFitHeight(32);
+						gate.setX(j*32);
+						gate.setY(i*32);
+						root.getChildren().add(gate);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -92,44 +113,121 @@ class MazeDisplayer
 	private void handleKeyPress(KeyCode code) {
 		switch (code) {
 			case W:
-				moveCharacter(0, -1); // Lên
+				moveCharacter(0, -4); // Lên
+				updateFrame(0,1,2,3);
 				break;
 			case S:
-				moveCharacter(0, 1); // Xuống
+				moveCharacter(0, 4); // Xuống
+				updateFrame(4,5,6,7);
 				break;
 			case A:
-				moveCharacter(-1, 0); // Trái
+				moveCharacter(-4, 0); // Trái
+				updateFrame(8,9,10,11);
 				break;
 			case D:
-				moveCharacter(1, 0); // Phải
+				moveCharacter(4, 0); // Phải
+				updateFrame(12,13,14,15);
 				break;
 			default:
 				break;
 		}
+
 	}
 
-	private void moveCharacter(int dx, int dy) {
-		int newX = characterX + dx;
-		int newY = characterY + dy;
 
-		// Kiểm tra xem có thể di chuyển tới vị trí mới hay không
-		if (mazeData[newY][newX] != 0) {
-			PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.2)); // Thời gian tạm dừng trước khi di chuyển
-			pauseTransition.setOnFinished(event -> {
-				characterX = newX;
-				characterY = newY;
-				root.getChildren().remove(character);
-				root.add(character, characterX, characterY);
-			});
-			pauseTransition.play();
+	private void moveCharacter(double dx, double dy) {
+		double newX = characterX + dx;
+		double newY = characterY + dy;
+		if(check(newX,newY)==1){
+			characterX = newX;
+			characterY = newY;
+			root.getChildren().remove(character);
+			character.setX(characterX);
+			character.setY(characterY);
+			root.getChildren().add(character);
+		}
+		if (check(newX,newY)==2){
+			showWinMessage();
+		}
+
+	}
+
+	private int check(double characterX , double characterY) {
+		int top = (int) ((characterY+5)/ 32);
+		int left = (int) ((characterX+5)/ 32);
+		int bottom = (int) (((characterY-5)+ 32) / 32);
+		int right = (int) (((characterX-5) + 32) / 32);
+
+		// Kiểm tra giới hạn mảng
+		if (top < 0 || top >= mazeData.length || left < 0 || left >= mazeData[0].length ||
+				bottom < 0 || bottom >= mazeData.length || right < 0 || right >= mazeData[0].length) {
+			return 0;
+		}
+
+		if(mazeData[top][left] == 1 && mazeData[top][right] == 1 && mazeData[bottom][left] == 1 && mazeData[bottom][right] == 1) return 1;
+		if(mazeData[bottom][right]==2) return 2;
+		return 0;
+
+	}
+	private void updateFrame(int... frameIndices) {
+		currentFrame = (currentFrame + 1) % frameIndices.length;
+		int frameIndex = frameIndices[currentFrame];
+
+		// Tạo đường dẫn tới tập tin ảnh mới dựa trên hành động
+		String imagePath = "";
+		switch (frameIndex) {
+			case 0: // Di chuyển lên
+				imagePath = "E:/code/MyGame/src/main/java/image/up.png";
+				break;
+			case 4: // Di chuyển xuống
+				imagePath = "E:/code/MyGame/src/main/java/image/down.png";
+				break;
+			case 8: // Di chuyển qua trái
+				imagePath = "E:/code/MyGame/src/main/java/image/left.png";
+				break;
+			case 12: // Di chuyển qua phải
+				imagePath = "E:/code/MyGame/src/main/java/image/right.png";
+				break;
+			case 16:
+				imagePath = "E:/code/MyGame/src/main/java/image/hold.png";
+				break;
+			default:
+				break;
+		}
+
+		// Nếu đường dẫn hợp lệ, cập nhật hình ảnh của characterImageView
+		if (!imagePath.isEmpty()) {
+			try {
+				Image spriteSheet = new Image(new FileInputStream(imagePath));
+				character.setImage(spriteSheet);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
+	private void showWinMessage() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Chúc mừng!");
+		alert.setHeaderText(null);
+		alert.setContentText("Bạn đã chiến thắng!");
+
+		alert.showAndWait();
+	}
+
 	public Scene getSceneMaze(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
 	{
 		drawMaze() ;
 		drawCharacter() ;
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
+		/*PauseTransition pause = new PauseTransition(Duration.millis(1000));
+		scene.setOnKeyReleased(e -> {
+			pause.setOnFinished(event->{
+				updateFrame(16);
+			});
+			pause.play();
+
+		});*/
 		return scene ;
 	}
 
