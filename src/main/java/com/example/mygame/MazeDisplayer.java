@@ -1,5 +1,6 @@
 package com.example.mygame;
 
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -7,10 +8,16 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.Node;
+import javafx.animation.KeyFrame;
+
 
 
 
@@ -26,6 +33,9 @@ class MazeDisplayer
 	private Pane root ;
 	private int [][] mazeData ;
 	private int currentFrame = 0;
+	private Timeline timeline ;
+	private StackPane stackPane ;
+	
 
 	public Pane getRoot() {
 		return root;
@@ -44,11 +54,11 @@ class MazeDisplayer
 	public MazeDisplayer(Pane root, int [][] mazeData)
 	{
 		setRoot(root) ;
-		setMazeData(mazeData );
+		setMazeData(mazeData);
 	}
 	private void drawCharacter() throws FileNotFoundException
 	{
-		character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/hold.png")));
+		character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/hold1.png")));
 		SpriteAnimation animation = new SpriteAnimation(character,
 		                Duration.millis(1000), 3, 32, 32);
 		animation.setCycleCount(javafx.animation.Animation.INDEFINITE);
@@ -134,7 +144,6 @@ class MazeDisplayer
 
 	}
 
-
 	private void moveCharacter(double dx, double dy) {
 		double newX = characterX + dx;
 		double newY = characterY + dy;
@@ -145,11 +154,11 @@ class MazeDisplayer
 			character.setX(characterX);
 			character.setY(characterY);
 			root.getChildren().add(character);
+
 		}
 		if (check(newX,newY)==2){
 			showWinMessage();
 		}
-
 	}
 
 	private int check(double characterX , double characterY) {
@@ -169,7 +178,7 @@ class MazeDisplayer
 		return 0;
 
 	}
-	private void updateFrame(int... frameIndices) {
+	public void updateFrame(int... frameIndices) {
 		currentFrame = (currentFrame + 1) % frameIndices.length;
 		int frameIndex = frameIndices[currentFrame];
 
@@ -177,23 +186,24 @@ class MazeDisplayer
 		String imagePath = "";
 		switch (frameIndex) {
 			case 0: // Di chuyển lên
-				imagePath = "E:/code/MyGame/src/main/java/image/up.png";
+				imagePath = "E:/code/MyGame/src/main/java/image/up1.png";
 				break;
 			case 4: // Di chuyển xuống
-				imagePath = "E:/code/MyGame/src/main/java/image/down.png";
+				imagePath = "E:/code/MyGame/src/main/java/image/down1.png";
 				break;
 			case 8: // Di chuyển qua trái
-				imagePath = "E:/code/MyGame/src/main/java/image/left.png";
+				imagePath = "E:/code/MyGame/src/main/java/image/left1.png";
 				break;
 			case 12: // Di chuyển qua phải
-				imagePath = "E:/code/MyGame/src/main/java/image/right.png";
+				imagePath = "E:/code/MyGame/src/main/java/image/right1.png";
 				break;
 			case 16:
-				imagePath = "E:/code/MyGame/src/main/java/image/hold.png";
+				imagePath = "E:/code/MyGame/src/main/java/image/hold1.png";
 				break;
 			default:
 				break;
 		}
+		timeline.playFromStart();
 
 		// Nếu đường dẫn hợp lệ, cập nhật hình ảnh của characterImageView
 		if (!imagePath.isEmpty()) {
@@ -220,14 +230,17 @@ class MazeDisplayer
 		drawCharacter() ;
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
-		/*PauseTransition pause = new PauseTransition(Duration.millis(1000));
-		scene.setOnKeyReleased(e -> {
+		//PauseTransition pause = new PauseTransition(Duration.millis(1000));
+		/*scene.setOnKeyReleased(e -> {
 			pause.setOnFinished(event->{
 				updateFrame(16);
 			});
 			pause.play();
 
 		});*/
+		timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+			updateFrame(16);
+		}));
 		return scene ;
 	}
 

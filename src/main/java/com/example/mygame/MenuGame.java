@@ -25,8 +25,6 @@ public class MenuGame extends Application {
     private Stage primaryStage;
     private Scene scene1;
 
-
-
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
         this.primaryStage = primaryStage;
@@ -111,11 +109,19 @@ public class MenuGame extends Application {
             primaryStage.setScene(member.getScene());
         });
         //
-        PlayLevel playLevel = new PlayLevel(primaryStage, scene1);
-
-        button1.setOnAction(event->{
-            primaryStage.setScene(playLevel.getScene());
+        //newPlayLevel playLevel = new newPlayLevel(primaryStage, scene1);
+        Main main = new Main();
+        button1.setOnAction(event -> {
+            try{
+                StackPane layout = new StackPane();
+                newPlayLevel playLevel = new newPlayLevel(primaryStage, scene1,layout);
+                primaryStage.setScene(playLevel.getScene());
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
         });
+
 
         // Mặc định khi mở chương trình là chạy scene1
         primaryStage.setScene(scene1);

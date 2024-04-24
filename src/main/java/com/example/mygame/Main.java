@@ -1,17 +1,9 @@
-
 package com.example.mygame;
-
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.fxml.FXMLLoader;
 
 
 public class Main extends Application {
