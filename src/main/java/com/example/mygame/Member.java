@@ -14,18 +14,17 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 
 public class Member {
     private Scene scene;
 
 
 
-    public Member(Stage primaryStage, Scene scene1) throws FileNotFoundException {
+    public Member(Stage primaryStage, Scene scene1){
 
         StackPane layout = new StackPane();
-        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/member.png"));
+        Image background = new Image("file:E:/code/MyGame/src/main/java/image/member.png");
         ImageView backgroundView = new ImageView(background);
         layout.getChildren().add(backgroundView);
 
@@ -34,7 +33,7 @@ public class Member {
         // Tạo nút Back
         Button backButton = new Button();
         backButton.getStyleClass().add("back-button");
-        Image image = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/back.png"));
+        Image image = new Image("file:E:/code/MyGame/src/main/java/image/back.png");
         ImageView imageView = new ImageView(image);
         backButton.setGraphic(imageView);
         layout.getChildren().add(backButton);

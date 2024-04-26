@@ -20,25 +20,25 @@ import java.io.FileNotFoundException;
 public class HelpScene {
     private Scene scene;
     private static final String[] IMAGE_PATHS = {
-            "E:/code/MyGame/src/main/java/wi/10.png",
-            "E:/code/MyGame/src/main/java/wi/11.png",
-            "E:/code/MyGame/src/main/java/wi/12.png",
-            "E:/code/MyGame/src/main/java/wi/13.png",
-            "E:/code/MyGame/src/main/java/wi/14.png",
-            "E:/code/MyGame/src/main/java/wi/15.png",
-            "E:/code/MyGame/src/main/java/wi/16.png",
-            "E:/code/MyGame/src/main/java/wi/17.png"
+            "file:E:/code/MyGame/src/main/java/wi/10.png",
+            "file:E:/code/MyGame/src/main/java/wi/11.png",
+            "file:E:/code/MyGame/src/main/java/wi/12.png",
+            "file:E:/code/MyGame/src/main/java/wi/13.png",
+            "file:E:/code/MyGame/src/main/java/wi/14.png",
+            "file:E:/code/MyGame/src/main/java/wi/15.png",
+            "file:E:/code/MyGame/src/main/java/wi/16.png",
+            "file:E:/code/MyGame/src/main/java/wi/17.png"
             // Thêm các đường dẫn hình ảnh khác vào đây
             // ảnh này  thêm ở package wi
     };
     private int currentFrame = 0;
 
-    public HelpScene(Stage primaryStage,Scene scene1) throws FileNotFoundException {
+    public HelpScene(Stage primaryStage,Scene scene1)  {
 
         StackPane layout = new StackPane();
 
         // Load hình ảnh background và hiển thị nó trong ImageView
-        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/helpscene4.png"));
+        Image background = new Image("file:E:/code/MyGame/src/main/java/image/helpscene4.png");
         ImageView backgroundView = new ImageView(background);
         layout.getChildren().add(backgroundView);
 
@@ -49,7 +49,7 @@ public class HelpScene {
         // Tạo nút Back và thêm vào layout
         Button backButton = new Button();
         backButton.getStyleClass().add("back-button");
-        Image backImage = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/back.png"));
+        Image backImage = new Image("file:E:/code/MyGame/src/main/java/image/back.png");
         ImageView backImageView = new ImageView(backImage);
         backButton.setGraphic(backImageView);
         layout.getChildren().add(backButton);
@@ -79,12 +79,8 @@ public class HelpScene {
         // Load hình ảnh nhân vật và thêm vào layout
         Image[] characterImages = new Image[IMAGE_PATHS.length];
         for (int i = 0; i < IMAGE_PATHS.length; i++) {
-            try {
-                Image fileInputStream = new Image(new FileInputStream(IMAGE_PATHS[i]));
-                characterImages[i] = fileInputStream;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            Image fileInputStream = new Image(IMAGE_PATHS[i]);
+            characterImages[i] = fileInputStream;
         }
 
         // Đặt hình ảnh ban đầu cho nhân vật
@@ -99,7 +95,7 @@ public class HelpScene {
         timeline.play();
 
         scene = new Scene(layout, 1000, 750);
-        scene.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
+        scene.getStylesheets().add("file:E:/code/MyGame/src/main/java/style.css");
     }
 
     public Scene getScene() {

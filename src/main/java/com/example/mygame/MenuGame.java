@@ -26,14 +26,14 @@ public class MenuGame extends Application {
     private Scene scene1;
 
     @Override
-    public void start(Stage primaryStage) throws FileNotFoundException {
+    public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
 
         primaryStage.setTitle("Menu Game");
         // button chứa tên game , ấn vào hiện ra thông tin về nhóm
         Button button = new Button();
         button.getStyleClass().add("button");//add class css cho button :) tôi nhận ra là tất cả nút khác kế thừa thuộc tính của button
-        Image name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/name2.png"));
+        Image name = new Image("file:E:/code/MyGame/src/main/java/image/name2.png");
         ImageView nameView = new ImageView(name);
         button.setGraphic(nameView);
         nameView.setFitWidth(500);
@@ -43,7 +43,7 @@ public class MenuGame extends Application {
         Button button1 = new Button();
         button1.getStyleClass().add("play-button");
         // Tải biểu tượng "play" từ tệp hình ảnh
-        Image playIconImage = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/play1.png"));
+        Image playIconImage = new Image("file:E:/code/MyGame/src/main/java/image/play1.png");
         ImageView playIconImageView = new ImageView(playIconImage);
         // Đặt biểu tượng "play" làm đồng hành của nút
         button1.setGraphic(playIconImageView);
@@ -52,7 +52,7 @@ public class MenuGame extends Application {
 
         Button button2 = new Button();
         button2.getStyleClass().add("help-button");
-        Image helpIconImage = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/help.png"));
+        Image helpIconImage = new Image("file:E:/code/MyGame/src/main/java/image/help.png");
         ImageView helpIconImageView = new ImageView(helpIconImage);
         button2.setGraphic(helpIconImageView);
         helpIconImageView.setFitWidth(150);
@@ -60,7 +60,7 @@ public class MenuGame extends Application {
 
         Button button3 = new Button();
         button3.getStyleClass().add("exit-button");
-        Image exitIconImage = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/exit.png"));
+        Image exitIconImage = new Image("file:E:/code/MyGame/src/main/java/image/exit.png");
         ImageView exitIconImageView = new ImageView(exitIconImage);
         button3.setGraphic(exitIconImageView);
         exitIconImageView.setFitWidth(150);

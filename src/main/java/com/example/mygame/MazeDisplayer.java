@@ -2,6 +2,9 @@ package com.example.mygame;
 
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -10,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
@@ -28,8 +32,8 @@ class MazeDisplayer
 	private static final int HEIGHT = 750;
 	private static final int RECT_SIZE = 32;
 	private ImageView character;
-	private double characterX = 32;
-	private double characterY = 32;
+	private double characterX = 32*15;
+	private double characterY = 0;
 	private Pane root ;
 	private int [][] mazeData ;
 	private int currentFrame = 0;
@@ -69,26 +73,38 @@ class MazeDisplayer
 		character.setY(characterY);
 		root.getChildren().add(character);
 		//
+		DropShadow dropShadow = new DropShadow();
+		dropShadow.setColor(Color.rgb(255,255,255,0.4)); // Màu sắc của ánh sáng
+		dropShadow.setRadius(100);// Bán kính của ánh sáng
+		dropShadow.setSpread(0.95);
+
+		// Áp dụng hiệu ứng ánh sáng cho nhân vật
+		character.setEffect(dropShadow);
 	}
 	private void drawMaze()
 	{
+		ColorAdjust colorAdjust = new ColorAdjust();
+		colorAdjust.setBrightness(-1);
+
+
 		for (int i = 0; i < mazeData.length; i++) {
 			for (int j = 0; j < mazeData[i].length; j++) {
-				if (mazeData[i][j] == 0)
+				if (mazeData[i][j] == 0 )
 				{
 					Image name;
 					try {
-						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/wall.png"));
+						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/wall2.png"));
 						ImageView wall = new ImageView(name) ;
 						wall.setFitWidth(32);
 						wall.setFitHeight(32);
 						wall.setX(j*32);
 						wall.setY(i*32);
+						wall.setEffect(colorAdjust);
 						root.getChildren().add(wall);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
-				} else if (mazeData[i][j] == 1) {
+				} else if (mazeData[i][j] == 1 || mazeData[i][j] == 3) {
 					Image name;
 					try {
 						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/path.jpg"));
@@ -97,6 +113,7 @@ class MazeDisplayer
 						path.setFitHeight(32);
 						path.setX(j*32);
 						path.setY(i*32);
+						path.setEffect(colorAdjust);
 						root.getChildren().add(path);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -159,6 +176,15 @@ class MazeDisplayer
 		if (check(newX,newY)==2){
 			showWinMessage();
 		}
+		if(check(newX,newY)==3){
+			characterX = 13*32;
+			characterY = 4*32;
+			root.getChildren().remove(character);
+			character.setX(characterX);
+			character.setY(characterY);
+			root.getChildren().add(character);
+		}
+
 	}
 
 	private int check(double characterX , double characterY) {
@@ -175,6 +201,7 @@ class MazeDisplayer
 
 		if(mazeData[top][left] == 1 && mazeData[top][right] == 1 && mazeData[bottom][left] == 1 && mazeData[bottom][right] == 1) return 1;
 		if(mazeData[bottom][right]==2) return 2;
+		if(mazeData[bottom][left]==3) return 3;
 		return 0;
 
 	}
@@ -230,14 +257,6 @@ class MazeDisplayer
 		drawCharacter() ;
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
-		//PauseTransition pause = new PauseTransition(Duration.millis(1000));
-		/*scene.setOnKeyReleased(e -> {
-			pause.setOnFinished(event->{
-				updateFrame(16);
-			});
-			pause.play();
-
-		});*/
 		timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
 			updateFrame(16);
 		}));

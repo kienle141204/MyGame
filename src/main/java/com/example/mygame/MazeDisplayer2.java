@@ -25,8 +25,8 @@ class MazeDisplayer2
 	private static final int HEIGHT = 400;
 	private static final int RECT_SIZE = 20;
 	private ImageView character;
-	private int characterX = 1;
-	private int characterY = 1;
+	private int characterX = 15;
+	private int characterY = 0;
 	private GridPane root ; 
 	private int [][] mazeData ;
 	protected static int limM, limN ; 

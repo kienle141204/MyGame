@@ -6,21 +6,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.Timeline;
 
-
-
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Locale;
 
 public class newPlayLevel {
@@ -38,10 +35,10 @@ public class newPlayLevel {
 
 
 
-    public newPlayLevel(Stage primaryStage, Scene scene1,StackPane layout) throws FileNotFoundException {
+    public newPlayLevel(Stage primaryStage, Scene scene1,StackPane layout)  {
 
         layout = new StackPane();
-        Image background = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/newplaylv1.png"));
+        Image background = new Image("file:E:/code/MyGame/src/main/java/image/newplaylv1.png");
         ImageView backgroundView = new ImageView(background);
         backgroundView.fitWidthProperty().bind(primaryStage.widthProperty());// làm như này thì nền mới full cửa sổ được
         backgroundView.fitHeightProperty().bind(primaryStage.heightProperty());
@@ -52,7 +49,7 @@ public class newPlayLevel {
         // Tạo nút Back
         Button backButton = new Button();
         backButton.getStyleClass().add("back-button");
-        Image image = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/back.png"));
+        Image image = new Image("file:E:/code/MyGame/src/main/java/image/back.png");
         ImageView imageView = new ImageView(image);
         backButton.setGraphic(imageView);
         layout.getChildren().add(imageView);
@@ -83,8 +80,8 @@ public class newPlayLevel {
         for (Button game : games) {
             game.setPrefSize(100, 100);
         }
-        Image gamebutton = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/gamebutton.png"));
-        Image flag = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/flag.png"));
+        Image gamebutton = new Image("file:E:/code/MyGame/src/main/java/image/gamebutton.png");
+        Image flag = new Image("file:E:/code/MyGame/src/main/java/image/flag.png");
         ImageView flagView = new ImageView(flag);
         for (Button game : games) {
             ImageView gameView = null;
@@ -107,7 +104,7 @@ public class newPlayLevel {
         StackPane.setMargin(game5, new Insets(0, 0, 250,800 ));
 
 
-        character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/hold.png")));
+        character = new ImageView(new Image("file:E:/code/MyGame/src/main/java/image/hold.png"));
         SpriteAnimation animation = new SpriteAnimation(character,
                 Duration.millis(1000), 3, 64, 64);
         animation.setCycleCount(javafx.animation.Animation.INDEFINITE);
@@ -118,6 +115,12 @@ public class newPlayLevel {
         StackPane.setMargin(character,new Insets(0, 0, 240,100 ));
         layout.getChildren().add(character);
 
+        //DropShadow dropShadow = new DropShadow();
+        //dropShadow.setColor(Color.YELLOW); // Màu sắc của ánh sáng
+        //dropShadow.setRadius(100); // Bán kính của ánh sáng
+
+        // Áp dụng hiệu ứng ánh sáng cho nhân vật
+        //character.setEffect(dropShadow);
 
         Main main = new Main();
         scene.setOnKeyPressed(event -> {
@@ -159,7 +162,7 @@ public class newPlayLevel {
         timeline.play();
 
     }
-    /*private void setPlayGameButton() throws  FileNotFoundException{
+    /*private void setPlayGameButton() {
         game1 = new Button();
         game2 = new Button();
         game3 = new Button();
@@ -169,8 +172,8 @@ public class newPlayLevel {
         for (Button game : games) {
             game.setPrefSize(100, 100);
         }
-        Image gamebutton = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/gamebutton.png"));
-        Image flag = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/flag.png"));
+        Image gamebutton = new Image("file:E:/code/MyGame/src/main/java/image/gamebutton.png");
+        Image flag = new Image("file:E:/code/MyGame/src/main/java/image/flag.png");
         ImageView flagView = new ImageView(flag);
         for (Button game : games) {
             ImageView gameView = null;
@@ -228,19 +231,19 @@ public class newPlayLevel {
         String imagePath = "";
         switch (frameIndex) {
             case 0: // Di chuyển lên
-                imagePath = "E:/code/MyGame/src/main/java/image/up.png";
+                imagePath = "file:E:/code/MyGame/src/main/java/image/up.png";
                 break;
             case 4: // Di chuyển xuống
-                imagePath = "E:/code/MyGame/src/main/java/image/down.png";
+                imagePath = "file:E:/code/MyGame/src/main/java/image/down.png";
                 break;
             case 8: // Di chuyển qua trái
-                imagePath = "E:/code/MyGame/src/main/java/image/left.png";
+                imagePath = "file:E:/code/MyGame/src/main/java/image/left.png";
                 break;
             case 12: // Di chuyển qua phải
-                imagePath = "E:/code/MyGame/src/main/java/image/right.png";
+                imagePath = "file:E:/code/MyGame/src/main/java/image/right.png";
                 break;
             case 16:
-                imagePath = "E:/code/MyGame/src/main/java/image/hold.png";
+                imagePath = "file:E:/code/MyGame/src/main/java/image/hold.png";
                 break;
             default:
                 break;
@@ -248,12 +251,8 @@ public class newPlayLevel {
 
         // Nếu đường dẫn hợp lệ, cập nhật hình ảnh của characterImageView
         if (!imagePath.isEmpty()) {
-            try {
-                Image spriteSheet = new Image(new FileInputStream(imagePath));
-                character.setImage(spriteSheet);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            Image spriteSheet = new Image(imagePath);
+            character.setImage(spriteSheet);
         }
     }
 
