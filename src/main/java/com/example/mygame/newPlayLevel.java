@@ -31,13 +31,15 @@ public class newPlayLevel {
     private Button game4;
     private Button game5;
     private Timeline timeline;
-    private StackPane layout;
+    private StackPane layout = new StackPane();
+    ImageView presseView;
+    private boolean pressed = false;
+
 
 
 
     public newPlayLevel(Stage primaryStage, Scene scene1,StackPane layout)  {
-
-        layout = new StackPane();
+        this.layout = layout;
         Image background = new Image("file:E:/code/MyGame/src/main/java/image/newplaylv1.png");
         ImageView backgroundView = new ImageView(background);
         backgroundView.fitWidthProperty().bind(primaryStage.widthProperty());// làm như này thì nền mới full cửa sổ được
@@ -122,7 +124,8 @@ public class newPlayLevel {
         // Áp dụng hiệu ứng ánh sáng cho nhân vật
         //character.setEffect(dropShadow);
 
-        Main main = new Main();
+        Game1 playgame1 = new Game1();
+        Game2 playgame2 = new Game2();
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case W:
@@ -144,7 +147,10 @@ public class newPlayLevel {
                 case E:
                     if (character.getBoundsInParent().intersects(game1.getBoundsInParent())) {
                         // Thực hiện hành động khi nhân vật giao với nút game
-                        main.start(primaryStage);
+                        playgame1.start(primaryStage);
+                    }
+                    else if(character.getBoundsInParent().intersects(game2.getBoundsInParent())) {
+                        playgame2.start(primaryStage);
                     }
                     else{
                         System.out.println("khong the chon");
@@ -160,6 +166,16 @@ public class newPlayLevel {
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        /////
+
+        Image presse = new Image("file:E:/code/MyGame/src/main/java/image/pressE.png");
+        presseView = new ImageView(presse);
+        presseView.setVisible(false);
+        layout.getChildren().add(presseView);
+        presseView.setTranslateX(0);
+        presseView.setTranslateY(350);
+
 
     }
     /*private void setPlayGameButton() {
@@ -200,12 +216,12 @@ public class newPlayLevel {
         double newTranslateY = character.getTranslateY() + dy;
 
         // Kiểm tra giới hạn di chuyển của nhân vật (không cho nhân vật di chuyển ra khỏi ranh giới của bản đồ)
-        if (newTranslateX >= 0 && newTranslateX <= 800 &&
-                newTranslateY >= -190 && newTranslateY <= 150) {
+        if (newTranslateX >= 0 && newTranslateX <= 800 && newTranslateY >= -190 && newTranslateY <= 150) {
             character.setTranslateX(newTranslateX);
             character.setTranslateY(newTranslateY);
         }
         Button[] games = {game1, game2, game3, game4, game5};
+        boolean isPress = false;
         for(Button game : games){
             double gameCenterX = game.getBoundsInParent().getMinX() + game.getBoundsInParent().getWidth() / 2;
             double gameCenterY = game.getBoundsInParent().getMinY() + game.getBoundsInParent().getHeight() / 2 -20;
@@ -215,12 +231,31 @@ public class newPlayLevel {
                 // Nhân vật đang đứng trên button
                 game.setScaleX(1.2);
                 game.setScaleY(1.2);
+                isPress = true;
             } else {
-
                 game.setScaleX(1.0);
                 game.setScaleY(1.0);
+
             }
+
+
         }
+        if(isPress){
+            presseView.setVisible(true);
+        }
+        else{
+            presseView.setVisible(false);
+        }
+        /*double gameCenterX1 = game1.getBoundsInParent().getMinX() + game1.getBoundsInParent().getWidth() / 2;
+        double gameCenterY1 = game1.getBoundsInParent().getMinY() + game1.getBoundsInParent().getHeight() / 2 -20;
+        if (character.getBoundsInParent().contains(gameCenterX1, gameCenterY1)) {
+            pressed = true;
+        }
+        else{
+            pressed = false;
+        }
+        presseView.setVisible(pressed);*/
+
 
     }
     public void updateFrame(int... frameIndices) {
