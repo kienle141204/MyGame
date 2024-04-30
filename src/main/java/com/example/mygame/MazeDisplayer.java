@@ -1,23 +1,25 @@
 package com.example.mygame;
 
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.Node;
 import javafx.animation.KeyFrame;
@@ -33,13 +35,13 @@ class MazeDisplayer
 	private static final int RECT_SIZE = 32;
 	private ImageView character;
 	private double characterX = 32*15;
-	private double characterY = 0;
+	private double characterY = 21*32;
 	private Pane root ;
 	private int [][] mazeData ;
 	private int currentFrame = 0;
 	private Timeline timeline ;
 	private StackPane stackPane ;
-	
+
 
 	public Pane getRoot() {
 		return root;
@@ -64,7 +66,7 @@ class MazeDisplayer
 	{
 		character = new ImageView(new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/hold1.png")));
 		SpriteAnimation animation = new SpriteAnimation(character,
-		                Duration.millis(1000), 3, 32, 32);
+				Duration.millis(1000), 3, 32, 32);
 		animation.setCycleCount(javafx.animation.Animation.INDEFINITE);
 		animation.play();
 		character.setFitWidth(RECT_SIZE);
@@ -128,7 +130,7 @@ class MazeDisplayer
 						e.printStackTrace();
 					}
 
-				} else if(mazeData[i][j] == 2)
+				} else if(mazeData[i][j] < 0)
 				{
 					Image name;
 					try {
@@ -192,8 +194,15 @@ class MazeDisplayer
 			root.getChildren().add(character);
 
 		}
-		if (check(newX,newY)==2){
-			showWinMessage();
+		if (check(newX,newY)==-1){
+			showWinMessage("chúc mừng bạn đã vượt qua màn 1 , hãy cố gắng lên nhé");
+			Stage currentStage = (Stage) root.getScene().getWindow();
+			currentStage.close();
+		}
+		if (check(newX,newY)==-2){
+			showWinMessage("chúc mừng bạn đã vượt qua màn 2 , hãy cố gắng lên nhé");
+			Stage currentStage = (Stage) root.getScene().getWindow();
+			currentStage.close();
 		}
 		if(check(newX,newY)==3){
 			characterX = 13*32;
@@ -219,7 +228,8 @@ class MazeDisplayer
 		}
 
 		if(mazeData[top][left] == 1 && mazeData[top][right] == 1 && mazeData[bottom][left] == 1 && mazeData[bottom][right] == 1) return 1;
-		if(mazeData[bottom][right]==2) return 2;
+		if(mazeData[bottom][right]==-1) return -1;
+		if(mazeData[bottom][right]==-2) return -2;
 		if(mazeData[bottom][left]==3) return 3;
 		return 0;
 
@@ -261,14 +271,38 @@ class MazeDisplayer
 			}
 		}
 	}
-	private void showWinMessage() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Chúc mừng!");
-		alert.setHeaderText(null);
-		alert.setContentText("Bạn đã chiến thắng!");
 
+
+	public void showWinMessage(String s) {
+		// Tạo một Alert với loại NONE
+		Alert alert = new Alert(Alert.AlertType.NONE);
+		alert.setHeaderText(null);
+		alert.setContentText(null);
+
+		// Tạo hình ảnh nền và thiết lập nền cho ô thông báo
+		Image backgroundImage = new Image("file:E:/code/MyGame/src/main/java/image/mazeimage.png");
+		BackgroundImage backgroundImg = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1.0, 1.0, true, true, false, false));
+		Background background = new Background(backgroundImg);
+		alert.getDialogPane().setBackground(background);
+
+		// Tạo một ButtonType "OK" và thêm vào danh sách các loại nút của Alert
+		ButtonType okButtonType = new ButtonType("", ButtonBar.ButtonData.OK_DONE);
+		alert.getButtonTypes().add(okButtonType);
+
+		// Lấy nút "OK" từ DialogPane và thiết lập biểu tượng cho nó
+		Button okButton = (Button) alert.getDialogPane().lookupButton(okButtonType);
+		Image okImage = new Image("file:E:/code/MyGame/src/main/java/image/okButton.png");
+		ImageView okImageView = new ImageView(okImage);
+		okButton.setGraphic(okImageView);
+		okButton.setStyle("-fx-background-color: transparent;\n" +
+				"    -fx-border-width: 0;\n" +
+				"    -fx-padding: 0;");
+
+
+		// Hiển thị ô thông báo và đợi cho đến khi nó được đóng
 		alert.showAndWait();
 	}
+
 	public Scene getSceneMaze1(int x, int y) throws  FileNotFoundException{
 		drawMaze() ;
 		drawCharacter() ;

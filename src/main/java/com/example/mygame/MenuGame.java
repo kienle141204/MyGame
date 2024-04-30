@@ -22,8 +22,8 @@ import java.io.FileNotFoundException;
 // ae pull về thì đổi lại đường dẫn của các file rồi chạy nhé
 
 public class MenuGame extends Application {
-    private Stage primaryStage;
-    private Scene scene1;
+    public Stage primaryStage;
+    public Scene scene1;
 
     @Override
     public void start(Stage primaryStage) {

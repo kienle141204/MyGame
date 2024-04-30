@@ -1,13 +1,15 @@
 package com.example.mygame;
 
 import javafx.application.Application;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 
 
-public class Game1 extends Application {
+public class Game1 extends Application
+{
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -40,8 +42,8 @@ public class Game1 extends Application {
                     {0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0},
                     {0,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0},
                     {0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,0,0},
-                    {0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,3,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0},
-                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+                    {0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0},
+                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
             };
 
             Pane root = new Pane() ;
@@ -50,6 +52,8 @@ public class Game1 extends Application {
             primaryStage.setTitle("Maze");
             primaryStage.setScene(scene);
             primaryStage.show();
+
+
         } catch(Exception e) {
             e.printStackTrace();
         }

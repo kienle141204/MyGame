@@ -21,7 +21,7 @@ import javafx.animation.Timeline;
 import java.util.Locale;
 
 public class newPlayLevel {
-    private Scene scene;
+    private Scene sceneNewPlatlevel;
     private ImageView character;
     private static double SPEED = 8;
     private int currentFrame = 0;
@@ -34,19 +34,21 @@ public class newPlayLevel {
     private StackPane layout = new StackPane();
     ImageView presseView;
     private boolean pressed = false;
+    private Stage GamePlaystage;
 
 
 
 
     public newPlayLevel(Stage primaryStage, Scene scene1,StackPane layout)  {
         this.layout = layout;
+        GamePlaystage = new Stage();
         Image background = new Image("file:E:/code/MyGame/src/main/java/image/newplaylv1.png");
         ImageView backgroundView = new ImageView(background);
         backgroundView.fitWidthProperty().bind(primaryStage.widthProperty());// làm như này thì nền mới full cửa sổ được
         backgroundView.fitHeightProperty().bind(primaryStage.heightProperty());
         layout.getChildren().add(backgroundView);
 
-        scene = new Scene(layout, 1000, 750);
+        sceneNewPlatlevel = new Scene(layout, 1000, 750);
 
         // Tạo nút Back
         Button backButton = new Button();
@@ -57,7 +59,7 @@ public class newPlayLevel {
         layout.getChildren().add(imageView);
         layout.getChildren().add(backButton);
 
-        scene.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
+        sceneNewPlatlevel.getStylesheets().add("file:///E:/code/MyGame/src/main/java/style.css");
         imageView.setFitHeight(50);
         imageView.setFitWidth(100);
 
@@ -126,7 +128,7 @@ public class newPlayLevel {
 
         Game1 playgame1 = new Game1();
         Game2 playgame2 = new Game2();
-        scene.setOnKeyPressed(event -> {
+        sceneNewPlatlevel.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case W:
                     moveCharacter(0,-SPEED);
@@ -147,10 +149,20 @@ public class newPlayLevel {
                 case E:
                     if (character.getBoundsInParent().intersects(game1.getBoundsInParent())) {
                         // Thực hiện hành động khi nhân vật giao với nút game
-                        playgame1.start(primaryStage);
+                        playgame1.start(GamePlaystage);
+                        primaryStage.hide();
+                        GamePlaystage.setOnHidden(e -> {
+                            // Hiển thị lại primaryStage
+                            primaryStage.show();
+                        });
                     }
                     else if(character.getBoundsInParent().intersects(game2.getBoundsInParent())) {
-                        playgame2.start(primaryStage);
+                        playgame2.start(GamePlaystage);
+                        primaryStage.hide();
+                        GamePlaystage.setOnHidden(e -> {
+                            // Hiển thị lại primaryStage
+                            primaryStage.show();
+                        });
                     }
                     else{
                         System.out.println("khong the chon");
@@ -292,6 +304,6 @@ public class newPlayLevel {
     }
 
     public Scene getScene() {
-        return scene;
+        return sceneNewPlatlevel;
     }
 }
