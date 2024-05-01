@@ -345,6 +345,7 @@ class MazeDisplayer
 
 	public Scene getSceneMaze1(int x, int y) throws  FileNotFoundException{
 		drawMaze() ;
+		drawGate();
 		drawCharacter() ;
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
@@ -356,6 +357,7 @@ class MazeDisplayer
 	public Scene getSceneMaze2(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
 	{
 		drawMaze() ;
+		drawGate();
 		drawCharacter() ;
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
@@ -367,6 +369,7 @@ class MazeDisplayer
 	public Scene getSceneMaze3(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
 	{
 		drawMaze() ;
+		drawGate();
 		drawCharacter() ;
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
