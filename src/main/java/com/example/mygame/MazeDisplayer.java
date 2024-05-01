@@ -32,10 +32,11 @@ class MazeDisplayer
 	public static  int NUM_OF_FRAMES = 3;
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 750;
-	private static final int RECT_SIZE = 32;
+	private int RECT_SIZE;
 	private ImageView character;
-	private double characterX = 32*15;
-	private double characterY = 21*32;
+	private ImageView gate;
+	private double characterX;
+	private double characterY=0;
 	private Pane root ;
 	private int [][] mazeData ;
 	private int currentFrame = 0;
@@ -57,8 +58,11 @@ class MazeDisplayer
 		this.mazeData = mazeData;
 	}
 
-	public MazeDisplayer(Pane root, int [][] mazeData)
+	public MazeDisplayer(Pane root, int [][] mazeData, int RECT_SIZE,int characterX)
 	{
+		this.characterX = characterX;
+		this.characterY = characterY;
+		this.RECT_SIZE = RECT_SIZE;
 		setRoot(root) ;
 		setMazeData(mazeData);
 	}
@@ -74,14 +78,6 @@ class MazeDisplayer
 		character.setX(characterX);
 		character.setY(characterY);
 		root.getChildren().add(character);
-		//
-		/*DropShadow dropShadow = new DropShadow();
-		dropShadow.setColor(Color.rgb(255,255,255,0.4)); // Màu sắc của ánh sáng
-		dropShadow.setRadius(500);// Bán kính của ánh sáng
-		dropShadow.setSpread(0.95);
-
-		// Áp dụng hiệu ứng ánh sáng cho nhân vật
-		character.setEffect(dropShadow);*/
 	}
 	private void lightCharacter(){
 		DropShadow dropShadow = new DropShadow();
@@ -90,7 +86,14 @@ class MazeDisplayer
 		dropShadow.setSpread(0.95);
 		// Áp dụng hiệu ứng ánh sáng cho nhân vật
 		character.setEffect(dropShadow);
-
+	}
+	private void lightGate(){
+		DropShadow dropShadow = new DropShadow();
+		dropShadow.setColor(Color.rgb(255,255,255,0.4)); // Màu sắc của ánh sáng
+		dropShadow.setRadius(500);// Bán kính của ánh sáng
+		dropShadow.setSpread(0.95);
+		// Áp dụng hiệu ứng ánh sáng cho nhân vật
+		gate.setEffect(dropShadow);
 	}
 
 	private void drawMaze()
@@ -106,11 +109,10 @@ class MazeDisplayer
 					try {
 						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/wall.png"));
 						ImageView wall = new ImageView(name) ;
-						wall.setFitWidth(32);
-						wall.setFitHeight(32);
-						wall.setX(j*32);
-						wall.setY(i*32);
-						//wall.setEffect(colorAdjust);
+						wall.setFitWidth(RECT_SIZE);
+						wall.setFitHeight(RECT_SIZE);
+						wall.setX(j*RECT_SIZE);
+						wall.setY(i*RECT_SIZE);
 						root.getChildren().add(wall);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -120,26 +122,46 @@ class MazeDisplayer
 					try {
 						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/path.jpg"));
 						ImageView path = new ImageView(name) ;
-						path.setFitWidth(32);
-						path.setFitHeight(32);
-						path.setX(j*32);
-						path.setY(i*32);
-						//path.setEffect(colorAdjust);
+						path.setFitWidth(RECT_SIZE);
+						path.setFitHeight(RECT_SIZE);
+						path.setX(j*RECT_SIZE);
+						path.setY(i*RECT_SIZE);
 						root.getChildren().add(path);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
 
-				} else if(mazeData[i][j] < 0)
-				{
+				} else if (mazeData[i][j] == 9) {
+					Image name;
+					try {
+						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/ice.png"));
+						ImageView path = new ImageView(name) ;
+						path.setFitWidth(RECT_SIZE);
+						path.setFitHeight(RECT_SIZE);
+						path.setX(j*RECT_SIZE);
+						path.setY(i*RECT_SIZE);
+						root.getChildren().add(path);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+		}
+	}
+	private void drawGate(){
+		for (int i = 0; i < mazeData.length; i++) {
+			for (int j = 0; j < mazeData[i].length; j++) {
+				if (mazeData[i][j] < 0) {
 					Image name;
 					try {
 						name = new Image(new FileInputStream("E:/code/MyGame/src/main/java/image/gate.png"));
-						ImageView gate = new ImageView(name) ;
-						gate.setFitWidth(32);
-						gate.setFitHeight(32);
-						gate.setX(j*32);
-						gate.setY(i*32);
+						gate = new ImageView(name);
+						gate.setFitWidth(RECT_SIZE);
+						gate.setFitHeight(RECT_SIZE);
+						gate.setX(j * RECT_SIZE);
+						gate.setY(i * RECT_SIZE);
+
 						root.getChildren().add(gate);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -173,7 +195,7 @@ class MazeDisplayer
 	}
 	private void darkMap(Pane root){
 		ColorAdjust colorAdjust = new ColorAdjust();
-		colorAdjust.setBrightness(-0.97);
+		colorAdjust.setBrightness(-0.95);
 		for(Node node : root.getChildren()){
 			if(node instanceof ImageView){
 				ImageView imageView = (ImageView) node;
@@ -204,9 +226,24 @@ class MazeDisplayer
 			Stage currentStage = (Stage) root.getScene().getWindow();
 			currentStage.close();
 		}
+		if (check(newX,newY)==-3){
+			showWinMessage("chúc mừng bạn đã vượt qua màn 3 , hãy cố gắng lên nhé");
+			Stage currentStage = (Stage) root.getScene().getWindow();
+			currentStage.close();
+		}
+		if (check(newX,newY)==-4){
+			showWinMessage("chúc mừng bạn đã vượt qua màn 4 , hãy cố gắng lên nhé");
+			Stage currentStage = (Stage) root.getScene().getWindow();
+			currentStage.close();
+		}
+		if (check(newX,newY)==-5){
+			showWinMessage("chúc mừng bạn đã vượt qua màn 5 , hãy cố gắng lên nhé");
+			Stage currentStage = (Stage) root.getScene().getWindow();
+			currentStage.close();
+		}
 		if(check(newX,newY)==3){
-			characterX = 13*32;
-			characterY = 4*32;
+			characterX = 13*RECT_SIZE;
+			characterY = 4*RECT_SIZE;
 			root.getChildren().remove(character);
 			character.setX(characterX);
 			character.setY(characterY);
@@ -216,10 +253,10 @@ class MazeDisplayer
 	}
 
 	private int check(double characterX , double characterY) {
-		int top = (int) ((characterY+5)/ 32);
-		int left = (int) ((characterX+5)/ 32);
-		int bottom = (int) (((characterY-5)+ 32) / 32);
-		int right = (int) (((characterX-5) + 32) / 32);
+		int top = (int) ((characterY+5)/ RECT_SIZE);
+		int left = (int) ((characterX+5)/ RECT_SIZE);
+		int bottom = (int) (((characterY-5)+ RECT_SIZE) / RECT_SIZE);
+		int right = (int) (((characterX-5) + RECT_SIZE) / RECT_SIZE);
 
 		// Kiểm tra giới hạn mảng
 		if (top < 0 || top >= mazeData.length || left < 0 || left >= mazeData[0].length ||
@@ -228,8 +265,11 @@ class MazeDisplayer
 		}
 
 		if(mazeData[top][left] == 1 && mazeData[top][right] == 1 && mazeData[bottom][left] == 1 && mazeData[bottom][right] == 1) return 1;
-		if(mazeData[bottom][right]==-1) return -1;
-		if(mazeData[bottom][right]==-2) return -2;
+		if(mazeData[top][left] == -1 || mazeData[top][right] == -1 || mazeData[bottom][left] == -1 || mazeData[bottom][right] == -1) return -1;
+		if(mazeData[top][left] == -2 || mazeData[top][right] == -2 || mazeData[bottom][left] == -2 || mazeData[bottom][right] == -2) return -2;
+		if(mazeData[top][left] == -3 || mazeData[top][right] == -3 || mazeData[bottom][left] == -3 || mazeData[bottom][right] == -3) return -3;
+		if(mazeData[top][left] == -4 || mazeData[top][right] == -4 || mazeData[bottom][left] == -4 || mazeData[bottom][right] == -4) return -4;
+		if(mazeData[top][left] == -5 || mazeData[top][right] == -5 || mazeData[bottom][left] == -5 || mazeData[bottom][right] == -5) return -5;
 		if(mazeData[bottom][left]==3) return 3;
 		return 0;
 
@@ -277,7 +317,7 @@ class MazeDisplayer
 		// Tạo một Alert với loại NONE
 		Alert alert = new Alert(Alert.AlertType.NONE);
 		alert.setHeaderText(null);
-		alert.setContentText(null);
+		alert.setContentText(s);
 
 		// Tạo hình ảnh nền và thiết lập nền cho ô thông báo
 		Image backgroundImage = new Image("file:E:/code/MyGame/src/main/java/image/mazeimage.png");
@@ -291,7 +331,7 @@ class MazeDisplayer
 
 		// Lấy nút "OK" từ DialogPane và thiết lập biểu tượng cho nó
 		Button okButton = (Button) alert.getDialogPane().lookupButton(okButtonType);
-		Image okImage = new Image("file:E:/code/MyGame/src/main/java/image/okButton.png");
+		Image okImage = new Image("file:E:/code/MyGame/src/main/java/image/okButton1.png");
 		ImageView okImageView = new ImageView(okImage);
 		okButton.setGraphic(okImageView);
 		okButton.setStyle("-fx-background-color: transparent;\n" +
@@ -316,9 +356,48 @@ class MazeDisplayer
 	public Scene getSceneMaze2(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
 	{
 		drawMaze() ;
+		drawCharacter() ;
+		Scene scene = new Scene(root, x, y);
+		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
+		timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+			updateFrame(16);
+		}));
+		return scene ;
+	}
+	public Scene getSceneMaze3(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
+	{
+		drawMaze() ;
+		drawCharacter() ;
+		Scene scene = new Scene(root, x, y);
+		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
+		timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+			updateFrame(16);
+		}));
+		return scene ;
+	}
+	public Scene getSceneMaze4(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
+	{
+		drawMaze() ;
+		drawGate();
 		darkMap(root);
 		drawCharacter() ;
 		lightCharacter();
+		lightGate();
+		Scene scene = new Scene(root, x, y);
+		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
+		timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+			updateFrame(16);
+		}));
+		return scene ;
+	}
+	public Scene getSceneMaze5(int x, int y) throws FileNotFoundException // x, y = toa do cua Scene
+	{
+		drawMaze() ;
+		drawGate();
+		darkMap(root);
+		drawCharacter() ;
+		lightCharacter();
+		lightGate();
 		Scene scene = new Scene(root, x, y);
 		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
 		timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {

@@ -128,6 +128,9 @@ public class newPlayLevel {
 
         Game1 playgame1 = new Game1();
         Game2 playgame2 = new Game2();
+        Game3 playgame3 = new Game3();
+        Game4 playgame4 = new Game4();
+        Game5 playgame5 = new Game5();
         sceneNewPlatlevel.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case W:
@@ -158,6 +161,30 @@ public class newPlayLevel {
                     }
                     else if(character.getBoundsInParent().intersects(game2.getBoundsInParent())) {
                         playgame2.start(GamePlaystage);
+                        primaryStage.hide();
+                        GamePlaystage.setOnHidden(e -> {
+                            // Hiển thị lại primaryStage
+                            primaryStage.show();
+                        });
+                    }
+                    else if(character.getBoundsInParent().intersects(game3.getBoundsInParent())) {
+                        playgame3.start(GamePlaystage);
+                        primaryStage.hide();
+                        GamePlaystage.setOnHidden(e -> {
+                            // Hiển thị lại primaryStage
+                            primaryStage.show();
+                        });
+                    }
+                    else if(character.getBoundsInParent().intersects(game4.getBoundsInParent())) {
+                        playgame4.start(GamePlaystage);
+                        primaryStage.hide();
+                        GamePlaystage.setOnHidden(e -> {
+                            // Hiển thị lại primaryStage
+                            primaryStage.show();
+                        });
+                    }
+                    else if(character.getBoundsInParent().intersects(game5.getBoundsInParent())) {
+                        playgame5.start(GamePlaystage);
                         primaryStage.hide();
                         GamePlaystage.setOnHidden(e -> {
                             // Hiển thị lại primaryStage
