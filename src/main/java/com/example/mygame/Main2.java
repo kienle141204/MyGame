@@ -1,0 +1,185 @@
+package com.Game;
+
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Main2 extends Application {
+    private Map<KeyCode, Boolean> keys = new HashMap<>();
+    private Character character;
+    private StackPane gamePane;
+    private int[][] mazeData; // Maze data
+    private double canvasWidth = 750;
+    private double canvasHeight = 750;
+    private MazeDrawer mazeDrawer;
+    private GraphicsContext gc;
+    private List<Item> items = new ArrayList<>(); // Danh sách các vật phẩm
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Dark Maze");
+        gamePane = new StackPane();
+        Pane backgroundPane = new Pane();
+
+        // Set up the scene
+        gamePane.getChildren().addAll(backgroundPane);
+
+        // Đặt biểu tượng ứng dụng
+        Image icon = new Image(getClass().getResource("/Image/mazeicon.png").toString());
+        primaryStage.getIcons().add(icon);
+
+        // Tải hình nền
+        Image backgroundImage = new Image(getClass().getResource("/Image/JungleMaze.jpg").toString());
+
+        // Tạo ImageView để hiển thị hình nền
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundPane.getChildren().add(backgroundView);
+
+        // Set up maze data (replace this with your maze data)
+        mazeData = new int[][] {
+                { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 },
+                { 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
+                { 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 },
+                { 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
+                { 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+                { 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
+                { 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0 },
+                { 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 },
+                { 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0 },
+                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
+                { 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 },
+                { 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0 },
+                { 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0 },
+                { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+
+        };
+
+        // Tạo canvas để vẽ mê cung
+        Canvas canvas = new Canvas(750, 750);
+        gamePane.getChildren().add(canvas);
+
+        // Tạo một MazeDrawer và vẽ mê cung lên canvas
+        mazeDrawer = new MazeDrawer(mazeData, canvasWidth, canvasHeight);
+        mazeDrawer.drawMaze(canvas.getGraphicsContext2D());
+
+        // Tạo scene
+        Scene scene = new Scene(gamePane, 750, 750);
+        primaryStage.setScene(scene);
+
+        // Thêm nhân vật
+        ImageView characterImageView = new ImageView(
+                new Image(getClass().getResource("/Image/NV1t1.png").toString()));
+        // Assign the local variable to the field of the Main class
+        character = new Character(characterImageView, mazeDrawer);
+        gamePane.getChildren().add(character);
+
+        // Đặt kích thước phù hợp cho ImageView
+        backgroundView.setFitWidth(750);
+        backgroundView.setFitHeight(750);
+        backgroundView.setPreserveRatio(false);
+        // Khởi tạo danh sách items
+        Pane itemPane = new Pane();
+        gamePane.getChildren().add(itemPane); // Thêm itemPane vào gamePane để chứa các vật phẩm
+
+        // Thêm vật phẩm vào danh sách
+       
+            Item item = new Item(canvasWidth, canvasHeight);
+            item.respawnAt(0, 10);
+            items.add(item);
+            itemPane.getChildren().add(item); // Thêm vật phẩm vào gamePane để hiển thị trên màn hình
+        
+
+        // Xử lý sự kiện bàn phím
+        scene.setOnKeyPressed(event -> {
+            keys.put(event.getCode(), true);
+        });
+
+        scene.setOnKeyReleased(event -> {
+            keys.put(event.getCode(), false);
+        });
+
+        // Định thời gian hoạt ảnh để liên tục cập nhật trạng thái trò chơi
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update(canvas.getGraphicsContext2D());
+            }
+        };
+        timer.start();
+
+        primaryStage.show();
+
+    }
+
+    public void update(GraphicsContext gc) {
+        if (isPressed(KeyCode.UP)) {
+            if (!character.isWallCollision(character.getX(), character.getY() - 2)) {
+                character.animation.play();
+                character.animation.setOffsetY(192);
+                character.moveY(-2);
+            }
+        } else if (isPressed(KeyCode.DOWN)) {
+            if (!character.isWallCollision(character.getX(), character.getY() + mazeDrawer.getCellSizeHeight())) {
+                character.animation.play();
+                character.animation.setOffsetY(0);
+                character.moveY(2);
+            }
+        } else if (isPressed(KeyCode.RIGHT)) {
+            if (!character.isWallCollision(character.getX() + mazeDrawer.getCellSizeWidth(), character.getY())) {
+                character.animation.play();
+                character.animation.setOffsetY(128);
+                character.moveX(2);
+            }
+        } else if (isPressed(KeyCode.LEFT)) {
+            if (!character.isWallCollision(character.getX() - 2, character.getY())) {
+                character.animation.play();
+                character.animation.setOffsetY(64);
+                character.moveX(-2);
+            }
+        } else {
+            character.animation.stop();
+        }
+        // Highlight the area around the character
+        mazeDrawer.highlightAreaAroundCharacter(gc, character.getX(), character.getY(), 10);
+        // Kiểm tra va chạm với các vật phẩm
+        for (Item item : items) {
+            if (item.isVisible() && item.checkCollision(character.getX(), character.getY(), character.getWidth(),
+                    character.getHeight())) {
+                // Xử lý khi nhân vật chạm vào vật phẩm
+                item.setVisible(false); // Ẩn vật phẩm
+                // Thêm mã logic xử lý khi nhân vật chạm vào vật phẩm ở đây
+            }
+        }
+    }
+
+    public boolean isPressed(KeyCode key) {
+        return keys.getOrDefault(key, false);
+    }
+
+}
