@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -17,16 +16,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Main2 extends Application {
+public class Main extends Application {
     private Map<KeyCode, Boolean> keys = new HashMap<>();
     private Character character;
-    private StackPane gamePane;
-    private int[][] mazeData; // Maze data
-    private double canvasWidth = 750;
+    static Pane gamePane;
+    private int[][] mazeData;
+    private double canvasWidth = 1000;
     private double canvasHeight = 750;
     private MazeDrawer mazeDrawer;
-    private GraphicsContext gc;
-    private List<Item> items = new ArrayList<>(); // Danh sách các vật phẩm
+    private List<Item> items = new ArrayList<>();
+    private GraphicsContext gc; 
+    public static ArrayList<Block> walls = new ArrayList<>();
+    
 
     public static void main(String[] args) {
         launch(args);
@@ -35,33 +36,33 @@ public class Main2 extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Dark Maze");
-        gamePane = new StackPane();
+        gamePane = new Pane();
         Pane backgroundPane = new Pane();
 
-        // Set up the scene
         gamePane.getChildren().addAll(backgroundPane);
 
-        // Đặt biểu tượng ứng dụng
         Image icon = new Image(getClass().getResource("/Image/mazeicon.png").toString());
+
         primaryStage.getIcons().add(icon);
 
-        // Tải hình nền
         Image backgroundImage = new Image(getClass().getResource("/Image/JungleMaze.jpg").toString());
-
-        // Tạo ImageView để hiển thị hình nền
         ImageView backgroundView = new ImageView(backgroundImage);
         backgroundPane.getChildren().add(backgroundView);
 
-        // Set up maze data (replace this with your maze data)
+        // Đặt kích thước phù hợp cho ImageView
+        backgroundView.setFitWidth(1000);
+        backgroundView.setFitHeight(750);
+        backgroundView.setPreserveRatio(false);
+
         mazeData = new int[][] {
-                { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 },
-                { 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
-                { 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 },
+                { 0, 1,1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0 },
+                { 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
+                { 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0 },
+                { 0, 1, 0, 0, 1, 0, 1, 1,1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 },
                 { 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
                 { 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
                 { 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
@@ -77,109 +78,113 @@ public class Main2 extends Application {
                 { 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0 },
                 { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-
         };
 
-        // Tạo canvas để vẽ mê cung
-        Canvas canvas = new Canvas(750, 750);
-        gamePane.getChildren().add(canvas);
-
-        // Tạo một MazeDrawer và vẽ mê cung lên canvas
+        Canvas canvas = new Canvas(canvasWidth, canvasHeight);
+        gc = canvas.getGraphicsContext2D();
         mazeDrawer = new MazeDrawer(mazeData, canvasWidth, canvasHeight);
-        mazeDrawer.drawMaze(canvas.getGraphicsContext2D());
 
-        // Tạo scene
-        Scene scene = new Scene(gamePane, 750, 750);
-        primaryStage.setScene(scene);
 
-        // Thêm nhân vật
-        ImageView characterImageView = new ImageView(
-                new Image(getClass().getResource("/Image/NV1t1.png").toString()));
-        // Assign the local variable to the field of the Main class
-        character = new Character(characterImageView, mazeDrawer);
-        gamePane.getChildren().add(character);
+        ImageView characterImage = new ImageView(new Image(getClass().getResource("/Image/NV1t1.png").toString()));
+        character = new Character(characterImage, mazeDrawer);
 
-        // Đặt kích thước phù hợp cho ImageView
-        backgroundView.setFitWidth(750);
-        backgroundView.setFitHeight(750);
-        backgroundView.setPreserveRatio(false);
-        // Khởi tạo danh sách items
-        Pane itemPane = new Pane();
-        gamePane.getChildren().add(itemPane); // Thêm itemPane vào gamePane để chứa các vật phẩm
-
-        // Thêm vật phẩm vào danh sách
-       
-            Item item = new Item(canvasWidth, canvasHeight);
-            item.respawnAt(0, 10);
-            items.add(item);
-            itemPane.getChildren().add(item); // Thêm vật phẩm vào gamePane để hiển thị trên màn hình
+        gamePane.getChildren().addAll(canvas, character);
         
+        for (int i = 0; i < mazeDrawer.getRows(); i++) {
+            for (int j = 0; j < mazeDrawer.getColumns(); j++) {
+                if (mazeData[i][j] == 0) {
+                    Block wall = new Block(j * mazeDrawer.getCellSizeWidth(), i * mazeDrawer.getCellSizeHeight(),mazeDrawer);
 
-        // Xử lý sự kiện bàn phím
-        scene.setOnKeyPressed(event -> {
-            keys.put(event.getCode(), true);
-        });
+                }
+            }
+        }
+       
 
-        scene.setOnKeyReleased(event -> {
-            keys.put(event.getCode(), false);
-        });
+        Item revealItem = new Item(200 , 195,30,30); // Initialize the item position correctly
+        gamePane.getChildren().add(revealItem);
+        items.add(revealItem);
 
-        // Định thời gian hoạt ảnh để liên tục cập nhật trạng thái trò chơi
+        
+        Scene scene = new Scene(gamePane, canvasWidth, canvasHeight);
+
+        scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
+        scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 update(canvas.getGraphicsContext2D());
+                if(!revealItem.isTimerRunning()) mazeDrawer.highlightAreaAroundCharacter(gc, character.getX(), character.getY(), 100);
+                 else mazeDrawer.drawFullMap(gc);
+                checkItemCollision();
+                updateItemVisibility() ;
+  
             }
         };
         timer.start();
-
-        primaryStage.show();
-
     }
+ 
+
 
     public void update(GraphicsContext gc) {
         if (isPressed(KeyCode.UP)) {
-            if (!character.isWallCollision(character.getX(), character.getY() - 2)) {
-                character.animation.play();
-                character.animation.setOffsetY(192);
-                character.moveY(-2);
-            }
+           
+                 character.animation.play();
+                character.animation.setOffsetY(96);
+                character.moveY(-1);
+            
         } else if (isPressed(KeyCode.DOWN)) {
-            if (!character.isWallCollision(character.getX(), character.getY() + mazeDrawer.getCellSizeHeight())) {
+            
                 character.animation.play();
                 character.animation.setOffsetY(0);
-                character.moveY(2);
-            }
+                character.moveY(1);
+            
         } else if (isPressed(KeyCode.RIGHT)) {
-            if (!character.isWallCollision(character.getX() + mazeDrawer.getCellSizeWidth(), character.getY())) {
-                character.animation.play();
-                character.animation.setOffsetY(128);
-                character.moveX(2);
-            }
-        } else if (isPressed(KeyCode.LEFT)) {
-            if (!character.isWallCollision(character.getX() - 2, character.getY())) {
+            
                 character.animation.play();
                 character.animation.setOffsetY(64);
-                character.moveX(-2);
-            }
+                character.moveX(1);
+            
+        } else if (isPressed(KeyCode.LEFT)) {
+            
+                character.animation.play();
+                character.animation.setOffsetY(32);
+                character.moveX(-1);
+            
         } else {
             character.animation.stop();
         }
-        // Highlight the area around the character
-        mazeDrawer.highlightAreaAroundCharacter(gc, character.getX(), character.getY(), 10);
-        // Kiểm tra va chạm với các vật phẩm
+    }   
+
+    private void updateItemVisibility() {
         for (Item item : items) {
-            if (item.isVisible() && item.checkCollision(character.getX(), character.getY(), character.getWidth(),
-                    character.getHeight())) {
-                // Xử lý khi nhân vật chạm vào vật phẩm
-                item.setVisible(false); // Ẩn vật phẩm
-                // Thêm mã logic xử lý khi nhân vật chạm vào vật phẩm ở đây
+            if (character.getVisionBox().getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())
+                && !(character.getHitbox().getBoundsInParent().intersects(item.getHitbox().getBoundsInParent()))) {
+                item.setItemVisible(true);
+            } else {
+                item.setItemVisible(false);
             }
         }
     }
 
-    public boolean isPressed(KeyCode key) {
-        return keys.getOrDefault(key, false);
+    private void checkItemCollision() {
+        for (Item item : items) {
+            if (character.getHitbox().getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())) {
+                System.out.println(character.getBoundsInParent());
+                if (item.getItemVisible()) {
+                    item.disappear();
+                    item.startTimer();
+                }
+            }
+        }
     }
 
+    private boolean isPressed(KeyCode key) {
+        return keys.getOrDefault(key, false);
+    }
+    
 }
+
