@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Main extends Application {
+public class Main2 extends Application {
     private Map<KeyCode, Boolean> keys = new HashMap<>();
     private Character character;
     static Pane gamePane;
@@ -36,6 +36,25 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Dark Maze");
+
+        // Tạo scene giới thiệu
+        Pane introPane = new Pane();
+        Image introBackgroundImage = new Image(getClass().getResource("/Image/mazeimage.png").toString());
+        ImageView introBackgroundView = new ImageView(introBackgroundImage);
+        introBackgroundView.setFitWidth(canvasWidth);
+        introBackgroundView.setFitHeight(canvasHeight);
+        introBackgroundView.setPreserveRatio(false);
+        introPane.getChildren().add(introBackgroundView);
+        Scene introScene = new Scene(introPane, canvasWidth, canvasHeight);
+
+        // Kiểm tra sự kiện
+        introScene.setOnMouseClicked(event -> primaryStage.setScene(createGameScene(primaryStage)));
+
+        primaryStage.setScene(introScene);
+        primaryStage.show();
+    }
+
+    private Scene createGameScene(Stage primaryStage) {
         gamePane = new Pane();
         Pane backgroundPane = new Pane();
 
@@ -125,6 +144,11 @@ public class Main extends Application {
             }
         };
         timer.start();
+        Scene gameScene = new Scene(gamePane, 1000, 750);
+        gameScene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
+        gameScene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
+
+        return gameScene;
     }
  
 
