@@ -197,7 +197,6 @@ public class Main2 extends Application {
     private void checkItemCollision() {
         for (Item item : items) {
             if (character.getHitbox().getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())) {
-                System.out.println(character.getBoundsInParent());
                 if (item.getItemVisible()) {
                     item.disappear();
                     item.startTimer();
