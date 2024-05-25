@@ -36,6 +36,8 @@ public class Main2 extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Dark Maze");
+        Image icon = new Image(getClass().getResource("/Image/mazeicon.png").toString());
+        primaryStage.getIcons().add(icon);
 
         // Tạo scene giới thiệu
         Pane introPane = new Pane();
@@ -48,14 +50,19 @@ public class Main2 extends Application {
         Scene introScene = new Scene(introPane, canvasWidth, canvasHeight);
 
         // Kiểm tra sự kiện
-        introScene.setOnMouseClicked(event -> primaryStage.setScene(createGameScene(primaryStage)));
+        introScene.setOnMouseClicked(event -> {
+            primaryStage.setScene(createGameScene(primaryStage));
+            primaryStage.show();
+        });
 
         primaryStage.setScene(introScene);
         primaryStage.show();
     }
 
     private Scene createGameScene(Stage primaryStage) {
-        gamePane = new Pane();
+            gamePane = new Pane();
+            gamePane.getChildren().clear();
+        
         Pane backgroundPane = new Pane();
 
         gamePane.getChildren().addAll(backgroundPane);
@@ -144,7 +151,8 @@ public class Main2 extends Application {
             }
         };
         timer.start();
-        Scene gameScene = new Scene(gamePane, 1000, 750);
+        Scene gameScene = primaryStage.getScene();
+        scene.setRoot(gamePane);    
         gameScene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         gameScene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
 
@@ -197,6 +205,7 @@ public class Main2 extends Application {
     private void checkItemCollision() {
         for (Item item : items) {
             if (character.getHitbox().getBoundsInParent().intersects(item.getHitbox().getBoundsInParent())) {
+                System.out.println(character.getBoundsInParent());
                 if (item.getItemVisible()) {
                     item.disappear();
                     item.startTimer();
