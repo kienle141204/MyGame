@@ -34,6 +34,7 @@ public class Main2 extends Application {
     private GraphicsContext gc; 
     public static ArrayList<Block> walls = new ArrayList<>();
     public static ArrayList<Rectangle> telegates = new ArrayList<>();
+    private List<ImageView> blackholds = new ArrayList<>();
     private ImageView imageView;
     private boolean levelCompleted = false;
     private AnimationTimer timer;
@@ -103,7 +104,7 @@ public class Main2 extends Application {
                 { 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 },
                 { 0, 1, 0, 3, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
                 { 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-                { 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
+                { 0, 1, 0, 1, 0, 3, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 },
                 { 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0 },
                 { 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 },
                 { 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0 },
@@ -128,7 +129,7 @@ public class Main2 extends Application {
 
         gamePane.getChildren().addAll(canvas, character);
         Image teleImage = new Image(getClass().getResource("/Image/blackhold1.jpg").toString());
-        ImageView blackhold = new ImageView(teleImage);
+        
         for (int i = 0; i < mazeDrawer.getRows(); i++) {
             for (int j = 0; j < mazeDrawer.getColumns(); j++) {
                 if (mazeData[i][j] == 0) {
@@ -138,10 +139,11 @@ public class Main2 extends Application {
                     telegate =new Rectangle(j * mazeDrawer.getCellSizeWidth(), i * mazeDrawer.getCellSizeHeight(), mazeDrawer.getCellSizeWidth(), mazeDrawer.getCellSizeHeight());
                     gamePane.getChildren().add(telegate);
                     telegates.add(telegate);
-                    
+                        ImageView blackhold = new ImageView(teleImage);
                         blackhold.setFitWidth(mazeDrawer.getCellSizeWidth());
                         blackhold.setFitHeight(mazeDrawer.getCellSizeHeight());
                         gamePane.getChildren().add(blackhold);
+                        blackholds.add(blackhold);
                         blackhold.setTranslateX(j * mazeDrawer.getCellSizeWidth());
                         blackhold.setTranslateY(i * mazeDrawer.getCellSizeHeight());
 
@@ -183,7 +185,7 @@ public class Main2 extends Application {
                 updateItemVisibility() ;
                 checkLevelCompletion(primaryStage);
                 checktelegateCollision();
-                updatetelegateVisibility(blackhold);
+                updatetelegateVisibility();
   
             }
         };
@@ -270,7 +272,7 @@ public class Main2 extends Application {
              int randomNumber = ThreadLocalRandom.current().nextInt(min, max + 1);
         
                 // Kiểm tra xem vị trí có hợp lệ không (không nằm trên tường)
-                if (mazeData[randomNumber][randomNumber]==1) {
+                if (mazeData[randomNumber][randomNumber]==1 && !character.willCollideWithWall(randomNumber *mazeDrawer.getCellSizeWidth(),randomNumber *mazeDrawer.getCellSizeHeight(), character.getHitbox().getWidth(), character.getHitbox().getHeight())) {
                     character.setTranslateX(randomNumber *mazeDrawer.getCellSizeWidth());
                     character.setTranslateY(randomNumber *mazeDrawer.getCellSizeHeight());
                     character.setX(randomNumber*mazeDrawer.getCellSizeWidth());
@@ -281,10 +283,10 @@ public class Main2 extends Application {
                 }
             }
         }
-        private void updatetelegateVisibility(ImageView blackhold) {
-            for (Rectangle telegate : telegates) {
-                if (character.getVisionBox().getBoundsInParent().intersects(telegate.getBoundsInParent())
-                    && !(character.getHitbox().getBoundsInParent().intersects(telegate.getBoundsInParent()))) {
+        private void updatetelegateVisibility() {
+            for (ImageView blackhold : blackholds) {
+                if (character.getVisionBox().getBoundsInParent().intersects(blackhold.getBoundsInParent())
+                    && !(character.getHitbox().getBoundsInParent().intersects(blackhold.getBoundsInParent()))) {
                         blackhold.setVisible(true);
                 } else {
                     blackhold.setVisible(false);
