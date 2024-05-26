@@ -127,7 +127,8 @@ public class Main2 extends Application {
         character = new Character(characterImage, mazeDrawer);
 
         gamePane.getChildren().addAll(canvas, character);
-        
+        Image teleImage = new Image(getClass().getResource("/Image/blackhold1.jpg").toString());
+        ImageView blackhold = new ImageView(teleImage);
         for (int i = 0; i < mazeDrawer.getRows(); i++) {
             for (int j = 0; j < mazeDrawer.getColumns(); j++) {
                 if (mazeData[i][j] == 0) {
@@ -137,6 +138,14 @@ public class Main2 extends Application {
                     telegate =new Rectangle(j * mazeDrawer.getCellSizeWidth(), i * mazeDrawer.getCellSizeHeight(), mazeDrawer.getCellSizeWidth(), mazeDrawer.getCellSizeHeight());
                     gamePane.getChildren().add(telegate);
                     telegates.add(telegate);
+                    
+                        blackhold.setFitWidth(mazeDrawer.getCellSizeWidth());
+                        blackhold.setFitHeight(mazeDrawer.getCellSizeHeight());
+                        gamePane.getChildren().add(blackhold);
+                        blackhold.setTranslateX(j * mazeDrawer.getCellSizeWidth());
+                        blackhold.setTranslateY(i * mazeDrawer.getCellSizeHeight());
+
+
             }
         }
     }
@@ -174,6 +183,7 @@ public class Main2 extends Application {
                 updateItemVisibility() ;
                 checkLevelCompletion(primaryStage);
                 checktelegateCollision();
+                updatetelegateVisibility(blackhold);
   
             }
         };
@@ -271,7 +281,16 @@ public class Main2 extends Application {
                 }
             }
         }
-        
+        private void updatetelegateVisibility(ImageView blackhold) {
+            for (Rectangle telegate : telegates) {
+                if (character.getVisionBox().getBoundsInParent().intersects(telegate.getBoundsInParent())
+                    && !(character.getHitbox().getBoundsInParent().intersects(telegate.getBoundsInParent()))) {
+                        blackhold.setVisible(true);
+                } else {
+                    blackhold.setVisible(false);
+                }
+            }
+        }
         // Check chạm vào cổng để hoàn thành 
         private void checkLevelCompletion(Stage primaryStage) {
         if (character.getHitbox().getBoundsInParent().intersects(imageView.getBoundsInParent())) { 
